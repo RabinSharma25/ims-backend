@@ -1,35 +1,89 @@
 package repositories
 
 import (
-	"errors"
-
 	"github.com/rabinsharma25/ims-backend/src/db"
 	"github.com/rabinsharma25/ims-backend/src/dto"
 	"github.com/rabinsharma25/ims-backend/src/models"
 	"github.com/sirupsen/logrus"
 )
 
-func (repo UserRepository) GetDashboardMetrices() (*dto.GenericResponseDto, error) {
+type DashboardRepository struct{}
+
+func (repo DashboardRepository) GetDashboardMetrices() (*dto.GenericResponseDto, error) {
 	logrus.Info("UserRepository.GetDashboardMetrices")
 	dbConn := db.GetDatabaseInstance()
 
-	userDetails := models.Users{}
+	// Slice to store the product list
+	ProductList := []dto.ProductDto{}
+	SalesSummaryList := []dto.SalesSummaryDto{}
+	PurchaseSummaryList := []dto.PurchaseSummaryDto{}
+	ExpenseSummaryList := []dto.ExpenseSummaryDto{}
+	ExpenseByCategoryList := []dto.ExpenseByCategoryDto{}
 
-	result := dbConn.Model(&models.Users{}).Where("id = ?", userId).Find(&userDetails)
+	// Fetch the first 15 records sorted in descending order by stock_quantity
+	result := dbConn.Model(&models.Products{}).
+		Order("stock_quantity DESC"). // Sorting by stock_quantity in descending order
+		Limit(15).
+		Find(&ProductList)
+
 	if result.Error != nil {
-		logrus.Error("Error adding user details")
-		return nil, errors.New("error fetching store owner details")
+		logrus.Error("Error fetching products: ", result.Error)
+		return nil, result.Error
 	}
 
-	res := dto.GetUserDetailsResDto{
-		Id:        int(userDetails.Id),
-		UserName:  userDetails.UserName,
-		FirstName: userDetails.FirstName,
-		LastName:  userDetails.LastName,
-		Email:     userDetails.Email,
+	result = dbConn.Model(&models.SalesSummary{}).
+		Order("date DESC"). // Sorting by stock_quantity in descending order
+		Limit(5).
+		Find(&SalesSummaryList)
+
+	if result.Error != nil {
+		logrus.Error("Error fetching products: ", result.Error)
+		return nil, result.Error
 	}
 
+	result = dbConn.Model(&models.PurchaseSummary{}).
+		Order("date DESC"). // Sorting by stock_quantity in descending order
+		Limit(5).
+		Find(&PurchaseSummaryList)
+
+	if result.Error != nil {
+		logrus.Error("Error fetching products: ", result.Error)
+		return nil, result.Error
+	}
+
+	result = dbConn.Model(&models.ExpenseSummary{}).
+		Order("date DESC"). // Sorting by stock_quantity in descending order
+		Limit(5).
+		Find(&ExpenseSummaryList)
+
+	if result.Error != nil {
+		logrus.Error("Error fetching products: ", result.Error)
+		return nil, result.Error
+	}
+
+	result = dbConn.Model(&models.ExpenseByCategory{}).
+		Select(`id, 
+		        expense_summary_id, 
+		        category, 
+		        CAST(amount AS TEXT) AS amount, 
+		        date`).
+		Order("date DESC").
+		Limit(5).
+		Find(&ExpenseByCategoryList)
+
+	if result.Error != nil {
+		logrus.Error("Error fetching expense by category: ", result.Error)
+		return nil, result.Error
+	}
+
+	// Return the response
 	return &dto.GenericResponseDto{
-		Data: res,
+		Data: []map[string]interface{}{
+			{"ProductList": ProductList},
+			{ "SalesSummaryList": SalesSummaryList},
+			{ "PurchaseSummaryList": PurchaseSummaryList},
+			{ "ExpenseSummaryList": ExpenseSummaryList},
+			{ "ExpenseByCategoryList": ExpenseByCategoryList},
+		},
 	}, nil
 }

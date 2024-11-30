@@ -2,13 +2,18 @@ package services
 
 import (
 	"github.com/rabinsharma25/ims-backend/src/dto"
+	"github.com/rabinsharma25/ims-backend/src/repositories"
 	"github.com/sirupsen/logrus"
 )
 
-func (service UserService) GetDashboardMetrices() (*dto.GenericResponseDto, error) {
+type DashboardService struct{}
+
+var dashboardRepository repositories.DashboardRepository = repositories.DashboardRepository{}
+
+func (service DashboardService) GetDashboardMetrices() (*dto.GenericResponseDto, error) {
 	logrus.Info("UserService.GetDashboardMetrices")
 
-	res, err := userRepository.GetDashboardMetrices()
+	res, err := dashboardRepository.GetDashboardMetrices()
 
 	if err != nil {
 		logrus.Error("Failed to get details ")
