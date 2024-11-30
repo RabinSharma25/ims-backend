@@ -1,0 +1,83 @@
+package middlewares
+
+// import (
+// 	"github.com/rabinsharma25/ims-backend/src/db"
+// 	"github.com/rabinsharma25/ims-backend/src/models"
+// 	"github.com/rabinsharma25/ims-backend/src/utils"
+// 	"github.com/gin-gonic/gin"
+// 	"github.com/sirupsen/logrus"
+// )
+
+// func Auth(c *gin.Context) {
+// 	logrus.Info("Middleware:Auth")
+// 	cookie, err := c.Cookie("auth")
+// 	if err != nil {
+// 		logrus.Error("Auth: ", err)
+// 		c.JSON(401, gin.H{"error": "Unauthorized", "message": "User Not Logged In"})
+// 		c.Abort()
+// 		return
+// 	}
+
+// 	claims, err := utils.ParseJwt(cookie)
+// 	if err != nil {
+// 		logrus.Error("Auth: JWT Verification Failed: ", err)
+// 		c.JSON(401, gin.H{"error": "Unauthorized", "message": "Invalid Auth Token"})
+// 		c.Abort()
+// 		return
+// 	}
+
+// 	// Check user if exists
+// 	var admin *models.Admins
+// 	dbConn := db.GetDatabaseInstance()
+// 	claimedId := claims["id"]
+// 	var intVal int
+
+// 	// Type assertion to convert interface{} to float64
+// 	if floatVal, ok := claimedId.(float64); ok {
+// 		// Conversion successful, now convert float64 to int
+// 		intVal = int(floatVal)
+// 		// fmt.Println("Converted float64 value to int:", intVal)
+// 	}
+// 	result := dbConn.Model(&models.Admins{}).Where("id = ?", intVal).First(&admin)
+// 	if result.Error != nil {
+// 		logrus.Error("Auth: User Not Found", err)
+// 		c.JSON(401, gin.H{"error": "Unauthorized", "message": "User Not Found"})
+// 		c.Abort()
+// 		return
+// 	}
+
+// 	if admin == nil {
+// 		logrus.Error("Auth: User Not Found")
+// 		c.JSON(401, gin.H{"error": "Unauthorized", "message": "User Not Found"})
+// 		c.Abort()
+// 		return
+// 	}
+
+// 	// check if user is active
+// 	// if admin.IsActive {
+// 	// 	logrus.Error("Auth: User Not Active")
+// 	// 	c.JSON(401, gin.H{"error": "Unauthorized", "message": "User Not Active"})
+// 	// 	c.Abort()
+// 	// 	return
+// 	// }
+
+// 	// add user to context
+// 	c.Set("userId", admin.Id)
+// 	c.Set("email", admin.Email)
+// 	// c.Set("role", user.Role)
+// 	// c.Set("isActive", user.IsActive)
+// 	c.Next()
+// }
+
+// func AdminAuth(c *gin.Context) {
+// 	logrus.Info("Middleware:AdminAuth")
+
+// 	if c.Keys["role"] == nil || c.Keys["role"] != "ADMIN" {
+// 		logrus.Error("AdminAuth: User Not Admin")
+// 		c.JSON(401, gin.H{"error": "Unauthorized", "message": "User Not Admin"})
+// 		c.Abort()
+// 		return
+// 	}
+
+// 	c.Next()
+// }
