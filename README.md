@@ -1,1 +1,1 @@
-# Go Backend Starter Code
+# IMS backend written in go
