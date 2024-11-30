@@ -6,14 +6,15 @@ import (
 )
 
 func SetupUserRoutes(router *gin.Engine) {
-	controller := controllers.UserController{}
-	user := router.Group("/api/user")
+	controller := controllers.DashboardController{}
+	user := router.Group("/api/dashboard")
 	{
-		user.POST("/addUserDetails", controller.AddUserDetails)
-		user.PUT("/updateUserDetails", controller.UpdateUserDetails)
-		user.GET("/getUserDetails/:id", controller.GetUserDetails)
-		user.DELETE("/deleteUserDetails/:id", controller.DeleteUserDetails)
-		user.PATCH("/updateUserEmail", controller.UpdateUserEmail)
+		// user.POST("/addUserDetails", controller.AddUserDetails)
+		// user.PUT("/updateUserDetails", controller.UpdateUserDetails)
+		// user.GET("/getUserDetails/:id", controller.GetUserDetails)
+		// user.DELETE("/deleteUserDetails/:id", controller.DeleteUserDetails)
+		// user.PATCH("/updateUserEmail", controller.UpdateUserEmail)
+		user.GET("/getDashboardMetrices", controller.GetDashboardMetrices)
 
 	}
 }
