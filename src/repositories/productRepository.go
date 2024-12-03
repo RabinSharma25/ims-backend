@@ -34,3 +34,25 @@ func (repo ProductRepository) GetProducts() (*dto.GenericResponseDto, error) {
 		},
 	}, nil
 }
+
+
+func (repo ProductRepository) AddProduct(payload dto.AddProductReqDto) (*dto.GenericResponseDto, error) {
+	logrus.Info("ProductRepository.AddProduct")
+	dbConn := db.GetDatabaseInstance()
+
+
+	newProduct := models.Products{
+		Id: payload.Id,
+		Name:payload.Name,
+		Price: payload.Price,
+		Rating: payload.Rating,
+		StockQuantity: payload.StockQuantity,
+	}
+
+	result := dbConn.Model(&models.Products{}).Create(&newProduct)
+	if result.Error != nil {
+		logrus.Error("Error adding product to database")
+		return nil, result.Error
+	}
+	return nil, nil
+}

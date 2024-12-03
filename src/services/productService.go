@@ -35,3 +35,29 @@ func (service ProductService) GetProducts() (*dto.GenericResponseDto, error) {
 	}, nil
 
 }
+
+func (service ProductService) AddProduct(payload dto.AddProductReqDto) (*dto.GenericResponseDto, error) {
+	logrus.Info("ProductService.AddProduct")
+
+	_, err := productRepository.AddProduct(payload)
+
+	if err != nil {
+		logrus.Error("Failed to Add new product")
+		return &dto.GenericResponseDto{
+			Code:    500,
+			Success: false,
+			Status:  "Failed",
+			Message: err.Error(),
+			Data:    nil,
+		}, err
+	}
+
+	return &dto.GenericResponseDto{
+		Code:    200,
+		Success: true,
+		Status:  "Completed",
+		Message: "Successfully added new product",
+		Data:    nil,
+	}, nil
+
+}
