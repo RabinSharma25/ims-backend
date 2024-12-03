@@ -7,19 +7,18 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-type ProductRepository struct{}
+type UserRepository struct{}
 
-func (repo ProductRepository) GetProducts() (*dto.GenericResponseDto, error) {
-	logrus.Info("ProductRepository.GetProducts")
+func (repo UserRepository) GetUsers() (*dto.GenericResponseDto, error) {
+	logrus.Info("UserRepository.GetUsers")
 	dbConn := db.GetDatabaseInstance()
 
 	// Slice to store the product list
-	ProductList := []dto.ProductDto{}
+	UserList := []dto.UserDto{}
 
-	// Fetch the first 15 records sorted in descending order by stock_quantity
-	result := dbConn.Model(&models.Products{}).
-		Order("stock_quantity DESC").
-		Find(&ProductList)
+	result := dbConn.Model(&models.Users{}).
+		Order("name DESC").
+		Find(&UserList)
 
 	if result.Error != nil {
 		logrus.Error("Error fetching products: ", result.Error)
@@ -30,7 +29,7 @@ func (repo ProductRepository) GetProducts() (*dto.GenericResponseDto, error) {
 	return &dto.GenericResponseDto{
 		Data: map[string]interface{}{
 
-			"ProductList": ProductList,
+			"UserList": UserList,
 		},
 	}, nil
 }
