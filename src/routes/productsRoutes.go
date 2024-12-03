@@ -7,9 +7,10 @@ import (
 
 func SetupProductRoutes(router *gin.Engine) {
 	controller := controllers.ProductController{}
-	user := router.Group("/api/product")
+	product := router.Group("/api/product")
 	{
-		user.GET("/getProducts", controller.GetProducts)
+		product.GET("/getProducts", controller.GetProducts)
+		product.POST("/addProduct", controller.AddProduct)
 
 	}
 }

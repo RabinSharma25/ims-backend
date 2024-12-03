@@ -74,6 +74,21 @@ type ExpenseByCategoryDto struct {
 	Id               string    `json:"id"`
 	ExpenseSummaryId string    `json:"expenseSummaryId"`
 	Category         string    `json:"category"`
-	Amount           string     `json:"amount"`
+	Amount           string    `json:"amount"`
 	Date             time.Time `json:"date"`
+}
+
+// export interface NewProduct {
+// 	name: string;
+// 	price: number;
+// 	rating?: number;
+// 	stockQuantity: number;
+//   }
+
+type AddProductReqDto struct {
+	Id            string   `json:"id"`
+	Name          string   `json:"name"`
+	Price         float64  `json:"price"`
+	Rating        *float64 `json:"rating,omitempty"`
+	StockQuantity int      `json:"stockQuantity"`
 }
